@@ -1,7 +1,7 @@
 #include "文字列の分割.h"
 #include <iostream>
 
-RESULT 文字列の分割::旧(const char* src, size_t srcSize, const char* delim)
+RESULT 文字列の分割::旧(const char* src, size_t srcSize, const char* delim, CLList& result)
 {
 	size_t len = strlen(src) + 1;
 	char* tmp = (char*)malloc(len);
@@ -11,10 +11,18 @@ RESULT 文字列の分割::旧(const char* src, size_t srcSize, const char* delim)
 	strcpy_s(tmp, len, src);
 
 	char* context = NULL;
+	/*
+	* char* strtok_s(char* str, const char* delimiters, char** context);
+	* str から delimiters（区切り文字のセット）の１文字を検索して、その文字が見つかった位置のポインタを返す。
+	* ２つめの以降のdelimitersを検索するとき、引数strをNULL、一回目で設定された引数contextを渡す。（contextは呼び出し間に位置情報を格納するために使用）
+	* 戻り値
+	*	str で見つかった次のトークンへのポインターを返します。 トークンが見つからない場合はNULLを返します。 各呼び出しは、返されたトークンの後に発生する最初の区切り記号にnull文字を置き換える方法で変更されます。
+	*/
 	char* token = strtok_s(tmp, delim, &context);
 	while (token != NULL) {
 		if (token != NULL) {
-			printf("%s\r\n", token);
+			result.additem(token, strlen(token) + 1);
+			//printf("%s\r\n", token);
 		}
 		token = strtok_s(NULL, delim, &context);
 	}
@@ -47,7 +55,7 @@ std::vector<std::string> 文字列の分割::split(const std::string& src, const std::
 	return result;
 }
 
-RESULT 文字列の分割::新(const std::string& src, const std::string& delims)
+RESULT 文字列の分割::新(const std::string& src, const std::string& delims, std::vector<std::string>& result)
 {
 	std::vector<std::string> wordlist;
 	wordlist.push_back(src);
@@ -61,22 +69,34 @@ RESULT 文字列の分割::新(const std::string& src, const std::string& delims)
 		}
 		wordlist = tmplist;
 	}
-	for (const auto& word : wordlist) {
-		std::cout << word << std::endl;
-	}
+	result = wordlist;
+	//for (const auto& word : wordlist) {
+	//	std::cout << word << std::endl;
+	//}
 
 	return RESULT::SUCCESS;
 }
 
 void 文字列の分割::exec()
 {
+	std::cout << "文字列の分割" << std::endl;
+
 	const char word1[] = "abc efg\rhij\nklm\tnopq \r\n\trst";
 	const char delim1[] = " \r\n\t";
-
-	旧(word1, sizeof(word1), delim1);
+	CLList result1;
+	旧(word1, sizeof(word1), delim1, result1);
+	ULONG cntMax = result1.getsize();
+	for (ULONG i = 0; i < cntMax; i++) {
+		CLList::Item* item = result1.getitem(i);
+		printf("旧：%s\r\n", (char*)item->val);
+	}
 
 	const std::string word2 = "abc efg\rhij\nklm\tnopq \r\n\trst";
 	const std::string delim2 = " \r\n\t";
+	std::vector<std::string> result2;
 
-	新(word2, delim2);
+	新(word2, delim2, result2);
+	for (const auto& item : result2) {
+		std::cout << "新：" << item <<  std::endl;
+	}
 }
