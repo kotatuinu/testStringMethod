@@ -5,6 +5,12 @@ RESULT 文字列の構築::旧（出力固定サイズ）(const char* src, size_t wordSize, size
 {
 	for (size_t i = 0; i < count; i++) {
 		// 文字列の結合
+		/*
+		* errno_t strcat_s( char *strDestination, size_t numberOfElements, const char *strSource );
+		* strSource を strDestination に追加し、結果の文字列の終端に null 文字を付けます。 strSource の先頭の文字は、strDestination の終端の null 文字を上書きします。 コピー元とコピー先の文字列が重なり合っている場合の strcat_s 関数の動作は未定義です。
+		* 戻り値
+		*	正常終了した場合は 0 を返します。失敗した場合はエラー コードを返します。
+		*/
 		errno_t  err = strcat_s(result, resultSize, src);
 		if (err != 0) {
 			// エラー
@@ -80,6 +86,8 @@ RESULT 文字列の構築::新(const std::vector<std::string>& src, std::string& result
 
 void 文字列の構築::exec()
 {
+	std::cout << "文字列の構築" << std::endl;
+
 	const char src1[][9] = {
 		"てすと１",
 		"てすと２",

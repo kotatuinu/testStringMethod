@@ -4,6 +4,12 @@
 
 RESULT 文字列比較::旧(const char* word1, const char* word2, int& cmpResult)
 {
+	/*
+	* int strcmp(const char *s1, const char *s2);
+	* strcmp() 関数は二つの文字列 s1 と s2 を較べる。 この関数は、 s1 が s2 に較べて 1)小さい、2)等しい、3)大きい場合に、 ゼロよりも 1)小さい、2)等しい、3)大きい整数を返す。
+	* 返り値
+	*	strcmp() 関数は整数を返す。 この整数は、ゼロよりも、1)小さい、2)等しい、3)大きいのいずれかである。 それぞれは、s1（または、この文字列の最初の n バイト）が s2 よりも、1)小さい、2)等しい、3)大きいに対応している。
+	*/
 	cmpResult = strcmp(word1, word2);
 
 	return RESULT::SUCCESS;
@@ -43,9 +49,9 @@ void 文字列比較::exec()
 	int cmpResult2 = 0;
 	const std::string word21 = "テスト";
 	const std::string word22 = "テスト";
-		result = 新1(word21, word22, cmpResult2);
+	result = 新1(word21, word22, cmpResult2);
 	printf("%d\r\n", cmpResult2);
-	
+
 	STRING_COMP cmpResult = 新2(word21, word22);
 	switch (cmpResult)
 	{
